@@ -1,0 +1,36 @@
+function Run-Git {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string[]]$Args
+    )
+
+    Write-Host "Running: git $($Args -join ' ')" -ForegroundColor Cyan
+    & git @Args
+    $code = $LASTEXITCODE
+    if ($code -ne 0) {
+        Write-Error "Command failed: git $($Args -join ' ') (exit code $code)"
+        exit $code
+    }
+}
+
+# Optional: ensure git is available
+& git --version > $null 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "git not found in PATH."
+    exit 1
+}
+
+$origBranch = (& git rev-parse --abbrev-ref HEAD 2>$null).Trim()
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($origBranch)) {
+    Write-Error "Could not determine current branch."
+    exit 1
+}
+
+Run-Git -Args @('checkout','main')
+Run-Git -Args @('merge',$origBranch)
+Run-Git -Args @('pull','github','main')
+Run-Git -Args @('push','github','main')
+Run-Git -Args @('checkout',$origBranch)
+Run-Git -Args @('merge', 'main')
+
+Write-Host 'All git commands completed successfully.' -ForegroundColor Green
