@@ -23,7 +23,7 @@ if ($target -eq [System.EnvironmentVariableTarget]::Machine) {
 $currentDir = (Get-Location).Path
 
 # Get the existing user PATH
-$existingPath = [Environment]::GetEnvironmentVariable("Path", "System")
+$existingPath = [Environment]::GetEnvironmentVariable("Path", $target)
 
 # Check if current directory is already in PATH
 if ($existingPath -split ";" -contains $currentDir) {
