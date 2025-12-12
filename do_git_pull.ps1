@@ -1,3 +1,8 @@
+param(
+    [switch]$Merge = $false
+)
+
+
 function Run-Git {
     param(
         [Parameter(Mandatory=$true)]
@@ -30,6 +35,12 @@ Run-Git -Args @('checkout','main')
 Run-Git -Args @('merge',$origBranch)
 Run-Git -Args @('pull','github','main')
 Run-Git -Args @('checkout',$origBranch)
-Run-Git -Args @('merge', 'main')
+if ($Merge) {
+    Run-Git -Args @('merge','main')
+    Write-Host 'Final merge completed successfully.' -ForegroundColor Green
+}
+else {
+    Write-Host 'Final merge skipped (use -Merge to enable).' -ForegroundColor Yellow
+}
 
 Write-Host 'All git commands completed successfully.' -ForegroundColor Green
