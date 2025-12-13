@@ -1,7 +1,7 @@
 Install-Module -Name Microsoft.WinGet.Client
 Import-Module Microsoft.WinGet.Client
 
-$GraphicApps = @("KDE.Krita","BlenderFoundation.Blender", "Inkscape.Inkscape")
+$GraphicApps = @("KDE.Krita","BlenderFoundation.Blender", "Inkscape.Inkscape", "Gyan.FFmpeg")
 $DevApps = @("Microsoft.VisualStudio.Community", "Microsoft.PowerShell", "Git.Git", "GitHub.cli", "GitHub.GitLFS", "Kitware.CMake", "JanDeDobbeleer.OhMyPosh", "Microsoft.VisualStudioCode")
 $DevAppsPython=@("astral-sh.ruff", "astral-sh.uv", "astral-sh.ty" )
 $DevAppsJS=@("OpenJS.NodeJS")
