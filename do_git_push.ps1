@@ -1,5 +1,5 @@
 param(
-    [switch]$Merge = $false
+    [switch]$Merge = $false,
     [string]$Remote = "github"
 )
 
