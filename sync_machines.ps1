@@ -87,6 +87,6 @@ function SyncDirectory {
 
 
 foreach ($dir in $SyncDirs) {
-    SyncDirectory -Directory $dir -ScriptPath "{$OptDir}\do_git_pull.ps1"
+    SyncDirectory -Directory $dir -ScriptPath "{$OptDir}\windows-bin\do_git_pull.ps1"
 }
 
