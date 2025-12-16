@@ -11,6 +11,9 @@ $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "V
 $NetworkApps=@("GlavSoft.TightVNC")
 $BrowserApps=@("Google.Chrome", "Zen-Team.Zen-Browser")
 
+$IntelLicensingApps = @()
+#$IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
+
 Write-Host $Apps
 
 function Invoke-AsAdministrator {
@@ -43,7 +46,7 @@ function Invoke-AsAdministrator {
     return $process.ExitCode
 }
 
-foreach($app in $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps) {
+foreach($app in $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $IntellicensingApps) {
     Write-Host "Installing $app"
     Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
 }
