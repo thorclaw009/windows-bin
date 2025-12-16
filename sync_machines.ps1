@@ -1,3 +1,8 @@
+param(
+    [string]$OptDir = ""
+)
+
+while ($OptDir -eq "")
 
 $SyncDirs = @(
     "D:\Opt\windows-bin",
@@ -51,7 +56,10 @@ function SyncDirectory {
     # Execute the script in the current directory
     try {
         Run-Command -Command "powershell.exe" -Args @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $ScriptPath, "-Merge" )
-        exit $LASTEXITCODE
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Script '$ScriptPath' failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+        }
     } catch {
         Write-Error "Error running {$ScriptPath}: $_"
         exit 4
@@ -60,6 +68,6 @@ function SyncDirectory {
 
 
 foreach ($dir in $SyncDirs) {
-    SyncDirectory -Directory $dir -ScriptPath ".\do_git_pull.ps1"
+    SyncDirectory -Directory $dir -ScriptPath "do_git_pull.ps1"
 }
 
