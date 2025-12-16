@@ -1,5 +1,6 @@
 param(
     [switch]$Merge = $false
+    [string]$Remote = "github"
 )
 
 function Run-Git {
@@ -31,9 +32,9 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($origBranch)) {
 }
 
 Run-Git -Args @('checkout','main')
-Run-Git -Args @('pull','github','main')
+Run-Git -Args @('pull',$Remote,'main')
 Run-Git -Args @('merge',$origBranch)
-Run-Git -Args @('push','github','main')
+Run-Git -Args @('push',$Remote,'main')
 Run-Git -Args @('checkout',$origBranch)
 
 if ($Merge) {
@@ -44,4 +45,4 @@ else {
     Write-Host 'Final merge skipped (use -Merge to enable).' -ForegroundColor Yellow
 }
 
-Write-Host 'All git commands completed successfully.' -ForegroundColor Green
+Write-Host 'All git commands completed successfully for remote $Remote.' -ForegroundColor Green

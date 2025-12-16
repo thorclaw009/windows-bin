@@ -1,4 +1,5 @@
-Install-Module -Name Microsoft.WinGet.Client
+#Install-Module -Name Microsoft.WinGet.Client
+Update-Module -Name Microsoft.WinGet.Client
 Import-Module Microsoft.WinGet.Client
 
 $GraphicApps = @("KDE.Krita","BlenderFoundation.Blender", "Inkscape.Inkscape", "Gyan.FFmpeg")
