@@ -1,6 +1,6 @@
 param(
-    [switch]$Merge = $false,
-    [string]$Remote = "github"
+    [string]$Remote = "github",
+    [switch]$Merge = $false
 )
 
 function Run-Git {
