@@ -2,7 +2,26 @@ param(
     [string]$OptDir = ""
 )
 
-while ($OptDir -eq "")
+
+
+if ($OptDir -eq "") {
+    $OptDirOptions = @(
+        "D:\Opt",
+        "C:\Opt"
+    )
+
+    foreach ($dir in $OptDirOptions) {
+        if (Test-Path -LiteralPath $dir) {
+            $OptDir = $dir
+            break
+        }
+    }   
+}
+
+if ($OptDir -eq "") {
+    Write-Error "No valid Opt directory found in options: $($OptDirOptions -join ', ')"
+    exit 1
+}
 
 $SyncDirs = @(
     "D:\Opt\windows-bin",
@@ -68,6 +87,6 @@ function SyncDirectory {
 
 
 foreach ($dir in $SyncDirs) {
-    SyncDirectory -Directory $dir -ScriptPath "do_git_pull.ps1"
+    SyncDirectory -Directory $dir -ScriptPath "{$OptDir}\do_git_pull.ps1"
 }
 
