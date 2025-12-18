@@ -5,6 +5,7 @@ Import-Module Microsoft.WinGet.Client
 $GraphicApps = @("KDE.Krita","BlenderFoundation.Blender", "Inkscape.Inkscape", "Gyan.FFmpeg")
 $DevApps = @("Microsoft.VisualStudio.Community", "Microsoft.PowerShell", "Git.Git", "GitHub.cli", "GitHub.GitLFS", "Kitware.CMake", "JanDeDobbeleer.OhMyPosh", "Microsoft.VisualStudioCode")
 $DevAppsPython=@("astral-sh.ruff", "astral-sh.uv", "astral-sh.ty" )
+$DevAppsZig=@("zig.zig", "zigtools.zls"))
 $DevAppsJS=@("OpenJS.NodeJS")
 $AIApps = @("ggml.llamacpp")
 $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "VideoLAN.VLC", "7zip.7zip", "SumatraPDF.SumatraPDF")
