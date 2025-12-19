@@ -1,3 +1,7 @@
+param(
+	[switch] $Zig = $false
+)
+
 #Install-Module -Name Microsoft.WinGet.Client
 Update-Module -Name Microsoft.WinGet.Client
 Import-Module Microsoft.WinGet.Client
@@ -5,7 +9,7 @@ Import-Module Microsoft.WinGet.Client
 $GraphicApps = @("KDE.Krita","BlenderFoundation.Blender", "Inkscape.Inkscape", "Gyan.FFmpeg")
 $DevApps = @("Microsoft.VisualStudio.Community", "Microsoft.PowerShell", "Git.Git", "GitHub.cli", "GitHub.GitLFS", "Kitware.CMake", "JanDeDobbeleer.OhMyPosh", "Microsoft.VisualStudioCode")
 $DevAppsPython=@("astral-sh.ruff", "astral-sh.uv", "astral-sh.ty" )
-$DevAppsZig=@("zig.zig", "zigtools.zls"))
+$DevAppsZig=@("zig.zig", "zigtools.zls")
 $DevAppsJS=@("OpenJS.NodeJS")
 $AIApps = @("ggml.llamacpp")
 $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "VideoLAN.VLC", "7zip.7zip", "SumatraPDF.SumatraPDF")
@@ -47,7 +51,13 @@ function Invoke-AsAdministrator {
     return $process.ExitCode
 }
 
-foreach($app in $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $IntellicensingApps) {
+$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $IntellicensingApps 
+
+if ($Zig) {
+	$allApps = $allApps + $DevAppsZig
+}
+
+foreach($app in $allApps) {
     Write-Host "Installing $app"
     Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
 }
