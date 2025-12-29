@@ -1,5 +1,6 @@
 param(
-	[switch] $Zig = $false
+	[switch] $Zig = $false,
+    [switch] $CAD = $false
 )
 
 #Install-Module -Name Microsoft.WinGet.Client
@@ -15,6 +16,7 @@ $AIApps = @("ggml.llamacpp")
 $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "VideoLAN.VLC", "7zip.7zip", "SumatraPDF.SumatraPDF")
 $NetworkApps=@("GlavSoft.TightVNC")
 $BrowserApps=@("Google.Chrome", "Zen-Team.Zen-Browser")
+$CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
 
 $IntelLicensingApps = @()
 #$IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
@@ -51,7 +53,7 @@ function Invoke-AsAdministrator {
     return $process.ExitCode
 }
 
-$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $IntellicensingApps 
+$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $IntellicensingApps + $CADApps
 
 if ($Zig) {
 	$allApps = $allApps + $DevAppsZig

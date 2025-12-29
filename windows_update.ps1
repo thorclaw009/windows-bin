@@ -1,6 +1,6 @@
 # Run in PowerShell as Administrator
-#Install-Module PSWindowsUpdate -Force
-Update-Module PSWindowsUpdate
+Install-Module PSWindowsUpdate -Force
+#Update-Module PSWindowsUpdate
 
 # Import the module
 Import-Module PSWindowsUpdate
