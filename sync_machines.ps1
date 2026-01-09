@@ -1,10 +1,12 @@
 param(
-    [string]$OptDir = ""
+    [string]$OptDir = "",
+    [string]$ScratchDir = ""
 )
 
 
 
 if ($OptDir -eq "") {
+    Write-Host "Searching for Opt dir"
     $OptDirOptions = @(
         "D:\Opt",
         "C:\Opt"
@@ -21,11 +23,35 @@ if ($OptDir -eq "") {
 if ($OptDir -eq "") {
     Write-Error "No valid Opt directory found in options: $($OptDirOptions -join ', ')"
     exit 1
+} else {
+    Write-Host "OptDir set to $OptDir"
+}
+
+if ($ScratchDir -eq "") {
+    Write-Host "Searching for Scratch dir"
+    $ScratchDirOptions = @(
+        "D:\Scratch",
+        "E:\Scratch"
+    )
+
+    foreach ($dir in $ScratchDirOptions) {
+        if (Test-Path -LiteralPath $dir) {
+            $ScratchDir = $dir
+            break
+        }
+    }   
+}
+
+if ($ScratchDir -eq "") {
+    Write-Error "No valid Scratch directory found in options: $($ScratchDirOptions -join ', ')"
+    exit 1
+} else {
+    Write-Host "ScratchDir set to $ScratchDir"
 }
 
 $SyncDirs = @(
-    "D:\Opt\windows-bin",
-    "D:\Scratch\numbers"
+    "$OptDir\windows-bin",
+    "$ScratchDir\numbers"
 )
 
 function Run-Command {
