@@ -1,6 +1,7 @@
 param(
-	[switch] $Zig = $false,
-    [switch] $CAD = $false
+	[switch] $DisableZig = $false,
+	[switch] $DisableCAD = $false,
+	[switch] $INTEL = $false
 )
 
 #Install-Module -Name Microsoft.WinGet.Client
@@ -17,11 +18,9 @@ $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "V
 $NetworkApps=@("GlavSoft.TightVNC")
 $BrowserApps=@("Google.Chrome", "Zen-Team.Zen-Browser")
 $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
+$IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 
-$IntelLicensingApps = @()
-#$IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
-
-Write-Host $Apps
+#Write-Host "Installing the following apps: $Apps"
 
 function Invoke-AsAdministrator {
     [CmdletBinding(DefaultParameterSetName = 'String')]
@@ -53,10 +52,18 @@ function Invoke-AsAdministrator {
     return $process.ExitCode
 }
 
-$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $IntellicensingApps + $CADApps
+$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps
 
-if ($Zig) {
+if (-not $DisableZig) {
 	$allApps = $allApps + $DevAppsZig
+}
+
+if (-not $DisableCAD) {
+	$allApps = $allApps + $CADApps
+}
+
+if ($INTEL) {
+	$allApps = $allApps + $IntellicensingApps
 }
 
 foreach($app in $allApps) {
