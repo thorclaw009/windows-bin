@@ -14,10 +14,11 @@ $DevAppsPython=@("astral-sh.ruff", "astral-sh.uv", "astral-sh.ty" )
 $DevAppsZig=@("zig.zig", "zigtools.zls")
 $DevAppsJS=@("OpenJS.NodeJS")
 $AIApps = @("ggml.llamacpp")
-$OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "VideoLAN.VLC", "7zip.7zip", "SumatraPDF.SumatraPDF")
+$OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "7zip.7zip", "SumatraPDF.SumatraPDF")
 $NetworkApps=@("GlavSoft.TightVNC")
 $BrowserApps=@("Google.Chrome", "Zen-Team.Zen-Browser")
 $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
+$MediaApps=@("OBS Studio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 
 #Write-Host "Installing the following apps: $Apps"
@@ -52,7 +53,7 @@ function Invoke-AsAdministrator {
     return $process.ExitCode
 }
 
-$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps
+$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $MediaApps
 
 if (-not $DisableZig) {
 	$allApps = $allApps + $DevAppsZig
