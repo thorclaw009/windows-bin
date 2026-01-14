@@ -30,9 +30,9 @@ if ($OptDir -eq "") {
 if ($ScratchDir -eq "") {
     Write-Host "Searching for Scratch dir"
     $ScratchDirOptions = @(
+        "$HOME\Scratch",
         "D:\Scratch",
-        "E:\Scratch",
-        "$HOME\Scratch"
+        "E:\Scratch"
     )
 
     foreach ($dir in $ScratchDirOptions) {
