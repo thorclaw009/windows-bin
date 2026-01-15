@@ -1,7 +1,8 @@
 param(
 	[switch] $DisableZig = $false,
 	[switch] $DisableCAD = $false,
-	[switch] $INTEL = $false
+	[switch] $Intel = $false,
+    [switch] $Nvidia = $false
 )
 
 #Install-Module -Name Microsoft.WinGet.Client
@@ -20,6 +21,7 @@ $BrowserApps=@("Google.Chrome", "Zen-Team.Zen-Browser")
 $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
 $MediaApps=@("OBS Studio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
+$NvidiaApps = @("Nvidia.CUDA", "Nvidia.PhysX")
 
 #Write-Host "Installing the following apps: $Apps"
 
@@ -33,7 +35,7 @@ function Invoke-AsAdministrator {
         [scriptblock]$ScriptBlock,
 
         [Parameter(ParameterSetName='ScriptBlock')]
-        [object[]]$Args
+        [object[]]$MyArgs
     )
 
     switch ($PSCmdlet.ParameterSetName) {
@@ -43,8 +45,8 @@ function Invoke-AsAdministrator {
         'ScriptBlock' {
             # Convert scriptblock to string and inject arguments
             $sbText = $ScriptBlock.ToString()
-            $argString = ($Args | ForEach-Object { "'$_'" }) -join ' '
-            $argsList = "-NoProfile -Command & { param($($Args | ForEach-Object { '$' + $_ })) $sbText } $argString"
+            $argString = ($MyArgs | ForEach-Object { "'$_'" }) -join ' '
+            $argsList = "-NoProfile -Command & { param($($MyArgs | ForEach-Object { '$' + $_ })) $sbText } $argString"
         }
     }
 
@@ -63,8 +65,13 @@ if (-not $DisableCAD) {
 	$allApps = $allApps + $CADApps
 }
 
-if ($INTEL) {
+if ($Intel) {
 	$allApps = $allApps + $IntellicensingApps
+}
+
+
+if ($Nvidia) {
+	$allApps = $allApps + $NvidiaApps
 }
 
 foreach($app in $allApps) {
