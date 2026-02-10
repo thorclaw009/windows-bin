@@ -19,7 +19,7 @@ $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "7
 $NetworkApps=@("GlavSoft.TightVNC")
 $BrowserApps=@("Google.Chrome", "Zen-Team.Zen-Browser")
 $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
-$MediaApps=@("OBS Studio",  "VideoLAN.VLC")
+$MediaApps=@("OBSProject.OBSStudio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 
 #Write-Host "Installing the following apps: $Apps"
