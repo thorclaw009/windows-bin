@@ -103,6 +103,44 @@ public class SyclInterop {
     }
 }
 
+function Test-CUDAInstallation {
+    <#
+    .SYNOPSIS
+        Checks if NVIDIA CUDA is installed on the system.
+
+    .DESCRIPTION
+        This function verifies CUDA installation by:
+        1. Checking for the CUDA environment variable.
+        2. Looking for the CUDA toolkit directory.
+        3. Checking if nvcc.exe (CUDA compiler) is available in PATH.
+
+    .OUTPUTS
+        Boolean (True if CUDA is installed, False otherwise)
+    #>
+
+    try {
+        $cudaPath = $env:CUDA_PATH
+        $nvcc = Get-Command nvcc.exe -ErrorAction SilentlyContinue
+
+        if ($cudaPath -and (Test-Path $cudaPath)) {
+            Write-Output "CUDA installation detected at $cudaPath"
+            return $true
+        }
+        elseif ($nvcc) {
+            Write-Output "CUDA compiler (nvcc.exe) detected in PATH."
+            return $true
+        }
+        else {
+            Write-Output "No CUDA installation detected."
+            return $false
+        }
+    }
+    catch {
+        Write-Output "Error checking CUDA installation."
+        return $false
+    }
+}
+
 $allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $MediaApps
 
 if (-not $DisableZig) {
@@ -120,6 +158,10 @@ if ($openAPIDevices -like "*OneAPI devices detected*") {
 
 if ($Nvidia) {
 	$allApps = $allApps + $NvidiaApps
+} else {
+    if (Test-CUDAInstallation) {
+        $allApps = $allApps + $NvidiaApps
+    }   
 }
 
 foreach($app in $allApps) {
