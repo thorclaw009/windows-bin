@@ -44,4 +44,4 @@ else {
     Write-Host 'Final merge skipped (use -Merge to enable).' -ForegroundColor Yellow
 }
 
-Write-Host 'All git commands completed successfully on $Remote.' -ForegroundColor Green
+Write-Host "All git commands completed successfully on $Remote." -ForegroundColor Green
