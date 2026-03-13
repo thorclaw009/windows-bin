@@ -103,7 +103,7 @@ public class SyclInterop {
     }
 }
 
-function Test-CUDAInstallation {
+function Test-CUDA-Installation {
     <#
     .SYNOPSIS
         Checks if NVIDIA CUDA is installed on the system.
@@ -159,7 +159,7 @@ if ($openAPIDevices -like "*OneAPI devices detected*") {
 if ($Nvidia) {
 	$allApps = $allApps + $NvidiaApps
 } else {
-    if (Test-CUDAInstallation) {
+    if (Test-CUDA-Installation) {
         $allApps = $allApps + $NvidiaApps
     }   
 }
