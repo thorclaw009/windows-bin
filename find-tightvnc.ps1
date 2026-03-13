@@ -7,25 +7,24 @@ $results = 1..255 | ForEach-Object -Parallel {
     $ip = $using:Network -replace "\.0$", ".$_"
     #Write-Host "IP Addr: $ip"
 
-    if (Test-Connection -ComputerName $ip -Count 1 -Quiet) {
-        $status = "Online"
-        try {
-            $tcpClient = New-Object System.Net.Sockets.TcpClient
-            $tcpClient.Connect($ip, $using:port)
-            if ($tcpClient.Connected) {
-                $tcpClient.Close()
-                $status = "TightVNC ($using:port)"
-            }
-        } catch {
+    $status = "Offline"
+    try {
+        $tcpClient = New-Object System.Net.Sockets.TcpClient
+        $tcpClient.Connect($ip, $using:port)
+        if ($tcpClient.Connected) {
+            $tcpClient.Close()
+            $status = "TightVNC ($using:port)"
         }
-    } else {
-        $status = "Offline"
+    } catch {
+        if (Test-Connection -ComputerName $ip -Count 1 -Quiet) {
+            $status = "Online"
+        }
     }
     [PSCustomObject]@{
         IP     = $ip
         Status = $status
     }
-} -ThrottleLimit 256
+} -ThrottleLimit 128
 
 # Display results in a nice table
 
