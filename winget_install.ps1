@@ -149,7 +149,7 @@ if (-not $DisableCAD) {
 	$allApps = $allApps + $CADApps
 }
 
-openAPIDevices = Get-OneAPIDevices
+$openAPIDevices = Get-OneAPIDevices
 if ($openAPIDevices -like "*OneAPI devices detected*") {
 	$allApps = $allApps + $IntellicensingApps
 }
@@ -159,16 +159,16 @@ if ($Nvidia) {
 	$allApps = $allApps + $NvidiaApps
 } else {
     Write-Host "Testing installation of Nvidia Apps"
-    $Nvidia = Test-CUDA-Installation
-    Write-Host "Test-CUDA-Installation $Nvidia"
-	if ($Nvidia) {
+    $nvCheck = Test-CUDA-Installation
+    Write-Host "Test-CUDA-Installation $nvCheck"
+	if ($nvCheck) {
         $allApps = $allApps + $NvidiaApps
     }   
 }
 
 Write-Host "Installing the following apps: $allApps"
 
-#foreach($app in $allApps) {
-#    Write-Host "Installing $app"
-#    Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
-#}
+foreach($app in $allApps) {
+    Write-Host "Installing $app"
+    Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
+}
