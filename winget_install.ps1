@@ -24,8 +24,6 @@ $MediaApps=@("OBSProject.OBSStudio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 $NvidiaApps = @("Nvidia.CUDA", "Nvidia.PhysX")
 
-#Write-Host "Installing the following apps: $Apps"
-
 function Invoke-AsAdministrator {
     [CmdletBinding(DefaultParameterSetName = 'String')]
     param(
@@ -157,14 +155,20 @@ if ($openAPIDevices -like "*OneAPI devices detected*") {
 }
 
 if ($Nvidia) {
+    Write-Host "Forced installation of Nvidia Apps"
 	$allApps = $allApps + $NvidiaApps
 } else {
-    if (Test-CUDA-Installation) {
+    Write-Host "Testing installation of Nvidia Apps"
+    $Nvidia = Test-CUDA-Installation
+    Write-Host "Test-CUDA-Installation $Nvidia"
+	if ($Nvidia) {
         $allApps = $allApps + $NvidiaApps
     }   
 }
 
-foreach($app in $allApps) {
-    Write-Host "Installing $app"
-    Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
-}
+Write-Host "Installing the following apps: $allApps"
+
+#foreach($app in $allApps) {
+#    Write-Host "Installing $app"
+#    Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
+#}
