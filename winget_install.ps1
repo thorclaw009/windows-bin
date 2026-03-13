@@ -2,7 +2,8 @@ param(
 	[switch] $DisableZig = $false,
 	[switch] $DisableCAD = $false,
 	[switch] $Intel = $false,
-    [switch] $Nvidia = $false
+    [switch] $Nvidia = $false,
+    [switch] $Dry = $false
 )
 
 #Install-Module -Name Microsoft.WinGet.Client
@@ -154,21 +155,24 @@ if ($openAPIDevices -like "*OneAPI devices detected*") {
 	$allApps = $allApps + $IntellicensingApps
 }
 
-if ($Nvidia) {
+if ($Nvidia -eq $true) {
     Write-Host "Forced installation of Nvidia Apps"
 	$allApps = $allApps + $NvidiaApps
 } else {
     Write-Host "Testing installation of Nvidia Apps"
     $nvCheck = Test-CUDA-Installation
     Write-Host "Test-CUDA-Installation $nvCheck"
-	if ($nvCheck) {
+	if ($nvCheck -eq $true) {
+        Write-Host "Adding Nvidia Apps $NvidiaApps"
         $allApps = $allApps + $NvidiaApps
     }   
 }
 
 Write-Host "Installing the following apps: $allApps"
 
-foreach($app in $allApps) {
-    Write-Host "Installing $app"
-    Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
+if (-not $Dry) {
+    foreach($app in $allApps) {
+        Write-Host "Installing $app"
+        Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
+    }
 }
