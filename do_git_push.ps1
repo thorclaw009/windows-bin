@@ -40,8 +40,7 @@ Run-Git -Args @('checkout',$origBranch)
 if ($Merge) {
     Run-Git -Args @('merge','main')
     Write-Host 'Final merge completed successfully.' -ForegroundColor Green
-}
-else {
+} else {
     Write-Host 'Final merge skipped (use -Merge to enable).' -ForegroundColor Yellow
 }
 
