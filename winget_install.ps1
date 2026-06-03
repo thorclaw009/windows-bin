@@ -153,6 +153,9 @@ if (-not $DisableCAD) {
 $openAPIDevices = Get-OneAPIDevices
 if ($openAPIDevices -like "*OneAPI devices detected*") {
 	$allApps = $allApps + $IntellicensingApps
+} else if ($Intel -eq $true) {
+    Write-Host "Forced installation of Intel oneAPI Apps"
+    $allApps = $allApps + $IntelLicensingApps
 }
 
 if ($Nvidia -eq $true) {
