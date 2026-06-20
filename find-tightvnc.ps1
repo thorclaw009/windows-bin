@@ -6,8 +6,8 @@ param(
 $localIps = Get-NetIPAddress -AddressFamily IPv4 | Select-Object -ExpandProperty IPAddress
 Write-Host "Local IPs: $($localIps -join ', ')"
 
-$timeoutMs = 100
-$pingTimeoutMs = 100
+$timeoutMs = 500
+$pingTimeoutMs = 500
 
 $results = 1..255 | ForEach-Object -Parallel {
     $ip = $using:Network -replace "\.0$", ".$_"
