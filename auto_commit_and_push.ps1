@@ -70,6 +70,7 @@ try {
             Pop-Location
         }
     } 
-}finally {
-        Pop-Location
+}
+finally {
+    Pop-Location
 }
