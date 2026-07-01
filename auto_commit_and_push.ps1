@@ -69,6 +69,9 @@ try {
         finally {
             Pop-Location
         }
+    }
+}
 finally {
     Pop-Location
 }
+
