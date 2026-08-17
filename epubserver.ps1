@@ -5,10 +5,10 @@ param(
 )
 
 # First run as administrator check
-if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Host "This script must be run as Administrator."
-    exit 1
-}
+#if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+#    Write-Host "This script must be run as Administrator."
+#    exit 1
+#}
 
 # or run the following command in an elevated PowerShell prompt to allow the URL reservation for the current user:
 # netsh http add urlacl url=http://+:3031/ user=jbamg
