@@ -1,25 +1,44 @@
 param(
     [string]$RootDir = ".",
-    [string]$HostName = "127.0.0.1",
     [int]$Port = 3031
 )
 
-# First run as administrator check
-#if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-#    Write-Host "This script must be run as Administrator."
-#    exit 1
-#}
+
 
 # or run the following command in an elevated PowerShell prompt to allow the URL reservation for the current user:
 # netsh http add urlacl url=http://+:3031/ user=jbamg
 
-Write-Host "Starting EPUB server..."
-Write-Host "Root directory: $RootDir"
-Write-Host "Host: $HostName"
-Write-Host "Port: $Port"
+# Punch through firewall
+# netsh http delete urlacl url=http://+:3031/
+# netsh http add urlacl url=http://+:3031/ user=jbamg
+# netsh advfirewall firewall add rule name="EPUB Server" dir=in action=allow protocol=TCP localport=3031
+
+
+# Check if running as Administrator
+# $identity  = [Security.Principal.WindowsIdentity]::GetCurrent()
+# $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+
+# if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+#     Write-Host "Restarting script as Administrator..."
+
+#     # Build argument list safely
+#     $escapedArgs = $args | ForEach-Object { '"{0}"' -f $_ }
+#     $argList = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" " + ($escapedArgs -join ' ')
+
+#     # Relaunch elevated
+#     Start-Process -FilePath "pwsh.exe" -Verb RunAs -ArgumentList $argList
+
+#     # Terminate current non-admin instance
+#     exit
+# }
+
 
 # Ensure absolute path
 $RootDir = (Resolve-Path $RootDir).Path
+
+Write-Host "Starting EPUB server..."
+Write-Host "Root directory: $RootDir"
+Write-Host "Port: $Port"
 
 # Create HTTP listener
 $listener = New-Object System.Net.HttpListener
