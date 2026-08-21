@@ -1,3 +1,6 @@
+. $PSScriptRoot\jacky-utils.ps1
+Import-Module jacky-utils
+
 # eza configurations
 Remove-Item Alias:\ls
 

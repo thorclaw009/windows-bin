@@ -6,6 +6,12 @@ param(
     [switch] $Dry = $false
 )
 
+# Add the directory of this module to PSModulePath
+if (-not ($env:PSModulePath -like "*$PSScriptRoot*")) {
+    $env:PSModulePath += ";$PSScriptRoot"
+}
+. $PSScriptRoot\jacky-utils.ps1
+
 #Install-Module -Name Microsoft.WinGet.Client
 Update-Module -Name Microsoft.WinGet.Client
 Import-Module Microsoft.WinGet.Client
@@ -181,11 +187,18 @@ if ($Nvidia -eq $true) {
     }   
 }
 
-Write-Host "Installing the following apps: $allApps"
 
 if (-not $Dry) {
-    foreach($app in $allApps) {
-        Write-Host "Installing $app"
-        Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
-    }
+   Write-Host "Installing the following apps: $allApps"
+   foreach($app in $allApps) {
+       Write-Host "Installing $app"
+       Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
+   }
 }
+
+if (-not $Dry) {
+    Write-Host "Updating configurations"
+    $resolved = Resolve-Path -Path "$PSScriptRoot\jacky-profile.ps1" -ErrorAction Stop
+    Add-IfMissing -File "$env:USERPROFILE\Onedrive\Documents\PowerShell\Microsoft.PowerShell_profile.ps1" -String ". $resolved"
+}
+
