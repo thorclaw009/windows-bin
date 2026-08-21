@@ -24,6 +24,7 @@ $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
 $MediaApps=@("OBSProject.OBSStudio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 $NvidiaApps = @("Nvidia.CUDA", "Nvidia.PhysX")
+$PWSHApps=@("Microsoft.PowerShell", "JanDeDobbeleer.OhMyPosh", "eza-community.eza", "ajeetdsouza.zoxide", "BurntSushi.ripgrep")
 
 function Invoke-AsAdministrator {
     [CmdletBinding(DefaultParameterSetName = 'String')]
@@ -140,7 +141,14 @@ function Test-CUDA-Installation {
     }
 }
 
-$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $MediaApps
+$allApps = $GraphicApps
+$allApps += $DevApps + $DevAppsPython + $DevAppsJS
+$allApps += $OfficeApps 
+$allApps += $NetworkApps 
+$allApps += $BrowserApps 
+$allApps += $AIApps
+$allApps += $MediaApps
+$allApps += $PWSHApps
 
 if (-not $DisableZig) {
 	$allApps = $allApps + $DevAppsZig
