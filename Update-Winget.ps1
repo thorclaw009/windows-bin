@@ -6,6 +6,13 @@ param(
     [switch] $Dry = $false
 )
 
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$logFile = Join-Path $PSScriptRoot "update_winget_$timestamp.log"
+
+# Redirect all streams (stdout + stderr) for the entire script
+# Run the script block inside a subshell with redirection
+powershell -NoProfile -ExecutionPolicy Bypass -File "$PSCommandPath" *> $logFile
+
 # Add the directory of this module to PSModulePath
 if (-not ($env:PSModulePath -like "*$PSScriptRoot*")) {
     $env:PSModulePath += ";$PSScriptRoot"
@@ -42,18 +49,25 @@ function Invoke-AsAdministrator {
         [scriptblock]$ScriptBlock,
 
         [Parameter(ParameterSetName='ScriptBlock')]
-        [object[]]$MyArgs
+        [object[]]$MyArgs,
+
+        [string]$LogFile = $null
     )
+
+    if (-not $LogFile) {
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $LogFile   = Join-Path $PSScriptRoot "update_winget_$timestamp.log"
+    }
 
     switch ($PSCmdlet.ParameterSetName) {
         'String' {
-            $argsList = "-NoProfile -Command $Command"
+            # Redirect stdout+stderr to log
+            $argsList = "-NoProfile -Command `$ErrorActionPreference='Continue'; $Command 2>&1 | Tee-Object -FilePath '$LogFile' -Append"
         }
         'ScriptBlock' {
-            # Convert scriptblock to string and inject arguments
-            $sbText = $ScriptBlock.ToString()
+            $sbText    = $ScriptBlock.ToString()
             $argString = ($MyArgs | ForEach-Object { "'$_'" }) -join ' '
-            $argsList = "-NoProfile -Command & { param($($MyArgs | ForEach-Object { '$' + $_ })) $sbText } $argString"
+            $argsList  = "-NoProfile -Command `$ErrorActionPreference='Continue'; & { param($($MyArgs | ForEach-Object { '$' + $_ })) $sbText } $argString 2>&1 | Tee-Object -FilePath '$LogFile' -Append"
         }
     }
 
@@ -192,7 +206,7 @@ if (-not $Dry) {
    Write-Host "Installing the following apps: $allApps"
    foreach($app in $allApps) {
        Write-Host "Installing $app"
-       Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
+       Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app" -LogFile $logFile
    }
 }
 
