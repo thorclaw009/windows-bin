@@ -75,7 +75,7 @@ function Run-Command {
 function SyncDirectory {
     param (
         [string]$Directory,
-        [string]$ScriptPath = ".\do_git_pull.ps1"
+        [string]$ScriptPath = ".\Pull-Git-Local.ps1"
     )
 
     Write-Host "Syncing directory: $Directory"
@@ -114,6 +114,6 @@ function SyncDirectory {
 
 
 foreach ($dir in $SyncDirs) {
-    SyncDirectory -Directory $dir -ScriptPath "${OptDir}\windows-bin\do_git_pull.ps1"
+    SyncDirectory -Directory $dir -ScriptPath "${OptDir}\windows-bin\Pull-Git-Local.ps1"
 }
 
