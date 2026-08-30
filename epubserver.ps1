@@ -1,6 +1,6 @@
 param(
     [string]$RootDir = ".",
-    [string]$HostName = "127.0.0.1",
+    [string]$HostName = "0.0.0.0", # "127.0.0.1",
     [int]$Port = 3031
 )
 
@@ -30,7 +30,7 @@ while ($true) {
     $response = $context.Response
 
     Write-Host "Received request: ${context} ${response} $($request.HttpMethod) $($request.Url.AbsolutePath)"
-    if ($request -eq $null) {
+    if ($null -eq $request) {
         Write-Host "Response is null. Skipping request."
         continue
     }
