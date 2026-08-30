@@ -54,9 +54,8 @@ try {
     if ($LASTEXITCODE -eq 0) {
         $aheadCount = [int]$aheadOutput
         if ($aheadCount -gt 0) {
-            Write-Host "Local repository is ahead of ${Remote} by ${aheadCount} commit(s). Pushing..."
-            Write-Host "Local repository is ahead of ${Remote} by ${aheadCount} commit(s). Executing do_git_push.ps1..."
-            & "$PSScriptRoot\do_git_push.ps1" -Remote $Remote -Merge
+            Write-Host "Local repository is ahead of ${Remote} by ${aheadCount} commit(s). Executing Push-Git-Local.ps1..."
+            & "$PSScriptRoot\Push-Git-Local.ps1" -Remote $Remote -Merge
         }
         else {
             Write-Host "Local repository is up-to-date with ${Remote}. No push needed."
@@ -64,8 +63,8 @@ try {
     }
     else {
         # If rev-list fails, it's likely because the remote tracking branch doesn't exist yet.
-        Write-Host "Remote tracking branch '${Remote}/${currentBranch}' not found. Assuming we need to push. Executing do_git_push.ps1..."
-        & "$PSScriptRoot\do_git_push.ps1" -Remote $Remote -Merge
+        Write-Host "Remote tracking branch '${Remote}/${currentBranch}' not found. Assuming we need to push. Executing Push-Git-Local.ps1..."
+        & "$PSScriptRoot\Push-Git-Local.ps1" -Remote $Remote -Merge
         finally {
             Pop-Location
         }

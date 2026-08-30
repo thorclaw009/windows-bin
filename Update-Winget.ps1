@@ -6,6 +6,19 @@ param(
     [switch] $Dry = $false
 )
 
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$logFile = Join-Path $PSScriptRoot "update_winget_$timestamp.log"
+
+# Redirect all streams (stdout + stderr) for the entire script
+# Run the script block inside a subshell with redirection
+powershell -NoProfile -ExecutionPolicy Bypass -File "$PSCommandPath" *> $logFile
+
+# Add the directory of this module to PSModulePath
+if (-not ($env:PSModulePath -like "*$PSScriptRoot*")) {
+    $env:PSModulePath += ";$PSScriptRoot"
+}
+. $PSScriptRoot\jacky-utils.ps1
+
 #Install-Module -Name Microsoft.WinGet.Client
 Update-Module -Name Microsoft.WinGet.Client
 Import-Module Microsoft.WinGet.Client
@@ -24,6 +37,7 @@ $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
 $MediaApps=@("OBSProject.OBSStudio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 $NvidiaApps = @("Nvidia.CUDA", "Nvidia.PhysX")
+$PWSHApps=@("Microsoft.PowerShell", "JanDeDobbeleer.OhMyPosh", "eza-community.eza", "ajeetdsouza.zoxide", "BurntSushi.ripgrep")
 
 function Invoke-AsAdministrator {
     [CmdletBinding(DefaultParameterSetName = 'String')]
@@ -35,18 +49,25 @@ function Invoke-AsAdministrator {
         [scriptblock]$ScriptBlock,
 
         [Parameter(ParameterSetName='ScriptBlock')]
-        [object[]]$MyArgs
+        [object[]]$MyArgs,
+
+        [string]$LogFile = $null
     )
+
+    if (-not $LogFile) {
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $LogFile   = Join-Path $PSScriptRoot "update_winget_$timestamp.log"
+    }
 
     switch ($PSCmdlet.ParameterSetName) {
         'String' {
-            $argsList = "-NoProfile -Command $Command"
+            # Redirect stdout+stderr to log
+            $argsList = "-NoProfile -Command `$ErrorActionPreference='Continue'; $Command 2>&1 | Tee-Object -FilePath '$LogFile' -Append"
         }
         'ScriptBlock' {
-            # Convert scriptblock to string and inject arguments
-            $sbText = $ScriptBlock.ToString()
+            $sbText    = $ScriptBlock.ToString()
             $argString = ($MyArgs | ForEach-Object { "'$_'" }) -join ' '
-            $argsList = "-NoProfile -Command & { param($($MyArgs | ForEach-Object { '$' + $_ })) $sbText } $argString"
+            $argsList  = "-NoProfile -Command `$ErrorActionPreference='Continue'; & { param($($MyArgs | ForEach-Object { '$' + $_ })) $sbText } $argString 2>&1 | Tee-Object -FilePath '$LogFile' -Append"
         }
     }
 
@@ -140,7 +161,14 @@ function Test-CUDA-Installation {
     }
 }
 
-$allApps = $GraphicApps + $DevApps + $DevAppsPython + $DevAppsJS + $OfficeApps + $NetworkApps + $BrowserApps + $AIApps + $MediaApps
+$allApps = $GraphicApps
+$allApps += $DevApps + $DevAppsPython + $DevAppsJS
+$allApps += $OfficeApps 
+$allApps += $NetworkApps 
+$allApps += $BrowserApps 
+$allApps += $AIApps
+$allApps += $MediaApps
+$allApps += $PWSHApps
 
 if (-not $DisableZig) {
 	$allApps = $allApps + $DevAppsZig
@@ -173,11 +201,18 @@ if ($Nvidia -eq $true) {
     }   
 }
 
-Write-Host "Installing the following apps: $allApps"
 
 if (-not $Dry) {
-    foreach($app in $allApps) {
-        Write-Host "Installing $app"
-        Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app"
-    }
+   Write-Host "Installing the following apps: $allApps"
+   foreach($app in $allApps) {
+       Write-Host "Installing $app"
+       Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app" -LogFile $logFile
+   }
 }
+
+if (-not $Dry) {
+    Write-Host "Updating configurations"
+    $resolved = Resolve-Path -Path "$PSScriptRoot\jacky-profile.ps1" -ErrorAction Stop
+    Add-IfMissing -File "$env:USERPROFILE\Onedrive\Documents\PowerShell\Microsoft.PowerShell_profile.ps1" -String ". $resolved"
+}
+

@@ -12,7 +12,7 @@ The path to the file you want to monitor for changes.
 
 .PARAMETER CommandsToRun
 An array of script blocks to execute if the file has been modified. 
-Defaults to executing do_git_push.ps1 with -Merge in the script's directory.
+Defaults to executing Git-Push-Local.ps1 with -Merge in the script's directory.
 #>
 param (
     [Parameter(Mandatory=$true)]
@@ -20,7 +20,7 @@ param (
     [string]$FileToCheck,
 
     [scriptblock[]]$CommandsToRun = @(
-        { & "$PSScriptRoot\do_git_push.ps1" -Merge }
+        { & "$PSScriptRoot\Push-Git-Local.ps1" -Merge }
     )
 )
 
