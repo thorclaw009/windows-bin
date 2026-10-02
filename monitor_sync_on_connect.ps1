@@ -8,7 +8,7 @@ if (-not (Test-Path $SyncScript)) {
 }
 
 # Transcript/log file in the same directory as the script
-$transcriptPath = Join-Path $PSScriptRoot 'monitor_sync_transcript.txt'
+$transcriptPath = Join-Path $PSScriptRoot 'monitor_sync_transcript.log'
 try {
     Start-Transcript -Path $transcriptPath -Append -ErrorAction SilentlyContinue
 } catch {
