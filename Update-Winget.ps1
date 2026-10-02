@@ -78,7 +78,6 @@ $Command 2>&1 | Tee-Object -FilePath '$LogFile' -Append
 [Console]::SetWindowSize(20,2)
 [Console]::BufferWidth  = 20
 [Console]::BufferHeight = 2
-[Console]::SetWindowSize(20,2)
 `$ErrorActionPreference='Continue'
 & { param($($MyArgs | ForEach-Object { '$' + $_ })) $sbText } $argString 2>&1 | Tee-Object -FilePath '$LogFile' -Append
 "@
@@ -86,7 +85,7 @@ $Command 2>&1 | Tee-Object -FilePath '$LogFile' -Append
         }
     }
 
-    $process = Start-Process powershell -ArgumentList $argsList -Verb RunAs -PassThru
+    $process = Start-Process powershell -ArgumentList $argsList -Verb RunAs -WindowStyle Hidden -PassThru
     $process.WaitForExit()
     
     return $process.ExitCode
@@ -223,10 +222,10 @@ if (-not $Dry) {
    foreach($app in $allApps) {
        Write-Host "Installing $app"
        Invoke-AsAdministrator -Command "winget install --disable-interactivity --scope machine $app" -LogFile $logFile
-       Write-Host "Press 'q' to quit..."
-        do {
-            $key = [System.Console]::ReadKey($true)
-        } until ($key.Key -eq 'Q')
+    #    Write-Host "Press 'q' to quit..."
+    #     do {
+    #         $key = [System.Console]::ReadKey($true)
+    #     } until ($key.Key -eq 'Q')
    }
 }
 
