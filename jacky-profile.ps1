@@ -2,7 +2,9 @@
 Import-Module jacky-utils
 
 # eza configurations
-Remove-Item Alias:\ls
+if (Test-Path Alias:\ls) {
+    Remove-Item Alias:\ls
+}
 
 # Define a function for ls
 function ll {
