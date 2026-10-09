@@ -125,12 +125,13 @@ catch {
 }
 
 $data = if ($response.PSObject.Properties['data']) { @($response.data) } else { @($response) }
-$modelIds = @($data | Where-Object { $_.id } | ForEach-Object { $_.id } | Select-Object -Unique)
+$modelIds = @($data | Where-Object { $_.id } | ForEach-Object { if ($_.id -match 'models--(.+?)[\\/]') { $Matches[1] -replace '^(.+?)(--)(.*)$', '$1/$3' } else { $_.id } }) | Select-Object -Unique
 if ($modelIds.Count -eq 0) { throw "No models found at '$BaseUrl/models'." }
 
 Write-Host "Discovered $($modelIds.Count) model(s) at $BaseUrl"
 $modelIds | ForEach-Object { Write-Host "  - $_" }
 
+if ($DefaultModel -and ($DefaultModel -match 'models--(.+?)[\\/]')) { $DefaultModel = $Matches[1] -replace '^(.+?)(--)(.*)$', '$1/$3' }
 if ($DefaultModel -and ($DefaultModel -notin $modelIds)) {
     throw "DefaultModel '$DefaultModel' is not served by $BaseUrl. Available: $($modelIds -join ', ')"
 }

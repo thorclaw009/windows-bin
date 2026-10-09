@@ -37,7 +37,7 @@ $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
 $MediaApps=@("OBSProject.OBSStudio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 $NvidiaApps = @("Nvidia.CUDA", "Nvidia.PhysX")
-$PWSHApps=@("Microsoft.PowerShell", "JanDeDobbeleer.OhMyPosh", "eza-community.eza", "ajeetdsouza.zoxide", "BurntSushi.ripgrep")
+$PWSHApps=@("Microsoft.PowerShell", "JanDeDobbeleer.OhMyPosh", "eza-community.eza", "ajeetdsouza.zoxide", "BurntSushi.ripgrep", "Devolutions.UniGetUI")
 
 function Invoke-AsAdministrator {
     [CmdletBinding(DefaultParameterSetName = 'String')]
