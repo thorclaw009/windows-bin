@@ -28,7 +28,7 @@ $DevApps = @("Microsoft.VisualStudio.Community", "Microsoft.PowerShell", "Git.Gi
 $DevAppsPython=@("astral-sh.ruff", "astral-sh.uv", "astral-sh.ty" )
 $DevAppsZig=@("zig.zig", "zigtools.zls")
 $DevAppsJS=@("OpenJS.NodeJS", "Oven-sh.Bun")
-$AIApps = @("ggml.llamacpp", "Google.Antigravity", "GitHub.Copilot")
+$AIApps = @("ggml.llamacpp", "Google.AntigravityCLI", "Google.AntigravityIDE", "GitHub.Copilot")
 $OfficeApps=@("KeePassXCTeam.KeePassXC", "TheDocumentFoundation.LibreOffice", "7zip.7zip", "SumatraPDF.SumatraPDF")
 #$UtilApps=@("RamenSoftware.Windhawk")
 $NetworkApps=@("GlavSoft.TightVNC", "Tailscale.Tailscale")
@@ -37,7 +37,7 @@ $CADApps=@("FreeCAD.FreeCAD", "KiCAD.KiCAD")
 $MediaApps=@("OBSProject.OBSStudio",  "VideoLAN.VLC")
 $IntelLicensingApps = @("Intel.OneAPI.BaseToolkit", "Intel.OneAPI.HPC.Toolkit", "Intel.OneAPI.DPCPP.Compatibility.Toolkit")
 $NvidiaApps = @("Nvidia.CUDA", "Nvidia.PhysX")
-$PWSHApps=@("Microsoft.PowerShell", "JanDeDobbeleer.OhMyPosh", "eza-community.eza", "ajeetdsouza.zoxide", "BurntSushi.ripgrep", "Devolutions.UniGetUI")
+$PWSHApps=@("Microsoft.PowerShell", "JanDeDobbeleer.OhMyPosh", "eza-community.eza", "ajeetdsouza.zoxide", "BurntSushi.ripgrep", "Devolutions.UniGetUI", "gerardog.gsudo")
 
 function Invoke-AsAdministrator {
     [CmdletBinding(DefaultParameterSetName = 'String')]
