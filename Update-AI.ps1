@@ -20,7 +20,7 @@ function Update-NpmPackage {
     param([string]$PackageName)
     if (npm list -g $PackageName -ErrorAction SilentlyContinue) {
         Write-Host "$PackageName found via npm. Updating..."
-        npm install -g $PackageName
+        npm install -g $PackageName --force --allow-scripts=ws
     } else {
         Write-Host "$PackageName not found via npm."
     }
@@ -43,7 +43,7 @@ Write-Host "Checking AI tools..."
 #Update-PipPackage -PackageName "unsloth"
 if (Test-Command "unsloth") {
     Write-Host "Unsloth found. Updating..."
-    irm https://unsloth.ai/install.ps1 | iex
+    #irm https://unsloth.ai/install.ps1 | iex
 } else {
     Write-Host "Unsloth not found."
 }

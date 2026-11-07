@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "iBooks.to Page Modifier",
+  "version": "1.0",
+  "description": "Modify pages on ibooks.to",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://ibooks.to/*",
+        "http://ibooks.to/*",
+        "https://*.ibooks.to/*",
+        "http://*.ibooks.to/*"
+      ],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
