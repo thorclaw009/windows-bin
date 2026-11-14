@@ -1,6 +1,7 @@
 param(
     [ValidateRange(1, 65535)]
-    [int]$Port = 8000
+    [int]$Port = 3180,
+    [switch]$Select
 )
 
 $localAddresses = @(Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
@@ -117,5 +118,64 @@ if ($servers.Count -eq 0) {
     return
 }
 
-Write-Host "OpenAI-compatible servers on port ${Port}:"
-$servers | Sort-Object IP | Format-Table -AutoSize -Wrap
+$servers = @($servers | Sort-Object IP)
+
+if (-not $Select) {
+    Write-Host "OpenAI-compatible servers on port ${Port}:"
+    $servers | Format-Table -AutoSize -Wrap
+    return
+}
+
+if ([Console]::IsInputRedirected) {
+    throw 'Interactive selection requires a console. Run the script from a terminal.'
+}
+
+$selectedIndex = 0
+$selectedServer = $null
+
+while ($null -eq $selectedServer) {
+    Clear-Host
+    Write-Host "Select an OpenAI-compatible server on port ${Port}:"
+
+    for ($index = 0; $index -lt $servers.Count; $index++) {
+        $marker = if ($index -eq $selectedIndex) { '>' } else { ' ' }
+        $line = '{0} {1}. {2}  {3}' -f $marker, ($index + 1), $servers[$index].URL, $servers[$index].Models
+        if ($index -eq $selectedIndex) {
+            Write-Host $line -ForegroundColor Cyan
+        } else {
+            Write-Host $line
+        }
+    }
+
+    Write-Host 'Use Up/Down and Enter to select, a number for quick selection, or Esc to cancel.'
+    $key = [Console]::ReadKey($true)
+
+    switch ($key.Key) {
+        'UpArrow' {
+            $selectedIndex = ($selectedIndex - 1 + $servers.Count) % $servers.Count
+        }
+        'DownArrow' {
+            $selectedIndex = ($selectedIndex + 1) % $servers.Count
+        }
+        'Enter' {
+            $selectedServer = $servers[$selectedIndex]
+        }
+        'Escape' {
+            Write-Host 'Selection cancelled.'
+            return
+        }
+        default {
+            if ($key.KeyChar -match '^[1-9]$') {
+                $numberedIndex = [int]::Parse($key.KeyChar.ToString()) - 1
+                if ($numberedIndex -lt $servers.Count) {
+                    $selectedIndex = $numberedIndex
+                    $selectedServer = $servers[$selectedIndex]
+                }
+            }
+        }
+    }
+}
+
+$env:OPENAI_BASE_URL = "$($selectedServer.URL)/v1"
+$env:OPENAI_API_KEY = "sk-jb-12345678"
+Write-Host "Selected $($selectedServer.URL). OPENAI_BASE_URL and OPENAI_API_KEY are set for this PowerShell session."
