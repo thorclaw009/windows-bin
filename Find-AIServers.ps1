@@ -80,7 +80,7 @@ $servers = @($addressesToScan | ForEach-Object -Parallel {
     try {
         $tcpClient = [System.Net.Sockets.TcpClient]::new()
         $connectTask = $tcpClient.ConnectAsync($ip, [int]$using:Port)
-        if (-not $connectTask.Wait(500) -or -not $tcpClient.Connected) {
+        if (-not $connectTask.Wait(1000) -or -not $tcpClient.Connected) {
             return
         }
     } catch {
@@ -111,7 +111,7 @@ $servers = @($addressesToScan | ForEach-Object -Parallel {
     } catch {
         # Most scanned addresses will be offline or will not expose this API.
     }
-} -ThrottleLimit 128)
+} -ThrottleLimit 64)
 
 if ($servers.Count -eq 0) {
     Write-Host "No OpenAI-compatible servers found on port $Port."
