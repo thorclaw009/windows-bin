@@ -1,6 +1,7 @@
 param(
     [ValidateRange(1, 65535)]
     [int]$Port = 3180,
+    [string]$ApiKey = $env:LLAMA_CPP_SERVER_API_KEY,
     [switch]$Select
 )
 
@@ -92,7 +93,9 @@ $servers = @($addressesToScan | ForEach-Object -Parallel {
     }
 
     try {
-        $response = Invoke-RestMethod -Uri $uri -Method Get -TimeoutSec 3 -ErrorAction Stop
+        $response = Invoke-RestMethod -Uri $uri -Method Get -Headers @{
+            Authorization = "Bearer $using:ApiKey"
+        } -TimeoutSec 3 -ErrorAction Stop
         if ($null -eq $response.data) {
             return
         }
