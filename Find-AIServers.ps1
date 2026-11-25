@@ -75,7 +75,7 @@ if ($addressesToScan.Count -eq 0) {
 $servers = @($addressesToScan | ForEach-Object -Parallel {
     $ip = $_
     $uri = "http://${ip}:$using:Port/v1/models"
-
+    # Write-Host "Scanning ${ip} Port $using:Port"
     $tcpClient = $null
     try {
         $tcpClient = [System.Net.Sockets.TcpClient]::new()
@@ -176,6 +176,8 @@ while ($null -eq $selectedServer) {
     }
 }
 
-$env:OPENAI_BASE_URL = "$($selectedServer.URL)/v1"
-$env:OPENAI_API_KEY = "sk-jb-12345678"
-Write-Host "Selected $($selectedServer.URL). OPENAI_BASE_URL and OPENAI_API_KEY are set for this PowerShell session."
+$env:LLAMA_CPP_SERVER_IP = $selectedServer.IP
+$env:LLAMA_CPP_SERVER_PORT = $Port
+$firstModel = ($selectedServer.Models -split ', ')[0]
+$env:LLAMA_CPP_SERVER_MODEL = $firstModel
+Write-Host "Selected $($selectedServer.URL). LLAMA_CPP_SERVER_IP, LLAMA_CPP_SERVER_PORT and LLAMA_CPP_SERVER_MODEL are set for this PowerShell session."
