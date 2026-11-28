@@ -93,11 +93,6 @@ $servers = @($addressesToScan | ForEach-Object -Parallel {
     }
 
     try {
-<<<<<<< HEAD
-        $response = Invoke-RestMethod -Uri $uri -Method Get -Headers @{
-            Authorization = "Bearer $using:ApiKey"
-        } -TimeoutSec 3 -ErrorAction Stop
-=======
         $requestParameters = @{
             Uri         = $uri
             Method      = 'Get'
@@ -111,7 +106,6 @@ $servers = @($addressesToScan | ForEach-Object -Parallel {
         }
 
         $response = Invoke-RestMethod @requestParameters
->>>>>>> local
         if ($null -eq $response.data) {
             return
         }
