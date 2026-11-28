@@ -92,7 +92,19 @@ $servers = @($addressesToScan | ForEach-Object -Parallel {
     }
 
     try {
-        $response = Invoke-RestMethod -Uri $uri -Method Get -TimeoutSec 3 -ErrorAction Stop
+        $requestParameters = @{
+            Uri         = $uri
+            Method      = 'Get'
+            TimeoutSec  = 5
+            ErrorAction = 'Stop'
+        }
+        if ($env:LLAMA_CPP_SERVER_API_KEY) {
+            $requestParameters['Headers'] = @{
+                Authorization = "Bearer $env:LLAMA_CPP_SERVER_API_KEY"
+            }
+        }
+
+        $response = Invoke-RestMethod @requestParameters
         if ($null -eq $response.data) {
             return
         }
